@@ -3,5 +3,8 @@ body {
 }
 
 .logo-image {
-    width: 6rem;
+    width: 9rem;
+}
+.profile-image {
+    width: 3rem;
 }
