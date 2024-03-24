@@ -81,7 +81,7 @@ class CalendarController extends AbstractController
                 'id' => $appointment->getId(),
                 'title' => $title,
                 'start' => Carbon::parse($appointment->getTimeAt())->toISOString(),
-                'color' => $color,
+                'color' => $color
             ];
 
             $events[] = $event;
