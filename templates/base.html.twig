@@ -16,47 +16,8 @@
       href="https://cdn.jsdelivr.net/npm/@icon/themify-icons@1.0.1-alpha.3/themify-icons.min.css"
     />
     {% block javascripts %}
-    {{
-      importmap()
-    }}
-     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
-        calendar.render();
-      });
-document.addEventListener('DOMContentLoaded', () => {
-    var calendarEl = document.getElementById('calendar-holder');
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        defaultView: 'dayGridMonth',
-        editable: true,
-        eventSources: [
-            {
-                url: "/fc-load-events",
-                method: "POST",
-                extraParams: {
-                    filters: JSON.stringify({})
-                },
-                failure: () => {
-                    // alert("There was an error while fetching FullCalendar!");
-                },
-            },
-        ],
-        headerToolbar: {
-            start: 'prev,next today',
-            center: 'title',
-            end: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        timeZone: 'UTC',
-    });
-    calendar.render();
-});
-    </script>
+    
+    
     {% endblock %}
   </head>
   <body>
@@ -121,11 +82,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         <li class="sidebar-item">
                           <a
                             class="sidebar-link"
-                            href="calendar"
+                            href="/calendar"
                             aria-expanded="false"
                           >
                             <span><i class="ti ti-calendar"></i></span>
                             <span class="hide-menu">Calendar</span>
+                          </a>
+                        </li>
+                        <li class="sidebar-item">
+                          <a
+                            class="sidebar-link"
+                            href="/appointments/appointments-all"
+                            aria-expanded="false"
+                          >
+                            <span><i class="ti ti-folder"></i></span>
+                            <span class="hide-menu">All Appointments</span>
                           </a>
                         </li>
                       </ul>

@@ -14,10 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/appointments')]
 class AppointmentsController extends AbstractController
 {
-    #[Route('/calendar', name: 'app_calendar', methods: ['GET'])]
+    #[Route('/appointments-all', name: 'app_appointments_index', methods: ['GET'])]
     public function index(AppointmentsRepository $appointmentsRepository): Response
     {
-        return $this->render('calendar/index.html.twig', [
+        return $this->render('appointments/index.html.twig', [
             'controller_name' => 'Appointments',
             'appointments' => $appointmentsRepository->findAll(),
         ]);

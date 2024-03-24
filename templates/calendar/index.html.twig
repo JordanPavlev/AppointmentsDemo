@@ -1,5 +1,42 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+  Calendar
+{% endblock %}
+{% block javascripts %}
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js" integrity="sha256-dHUNnePy81fXq4D/wfu7cPsEIP7zl6MvLb84jtZf+UY=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+      var calendarEl = document.getElementById('calendar-holder')
+    
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        defaultView: 'dayGridMonth',
+        editable: true,
+        eventSources: [
+          {
+            url: "{{ path('load-appointments') }}",
+            method: 'POST',
+            extraParams: {
+              filters: JSON.stringify({})
+            },
+            failure: () => {
+              // alert("There was an error while fetching FullCalendar!");
+            }
+          }
+        ],
+        headerToolbar: {
+          start: 'prev,next today',
+          center: 'title',
+          end: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        timeZone: 'UTC'
+      })
+      calendar.render()
+    })
+  </script>
+{% endblock %}
+
 {% block body %}
   <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
     <div class="card-body px-4 py-3">
@@ -23,8 +60,7 @@
       </div>
     </div>
   </div>
-  <button aria-pressed="false" class="btn btn-primary fw-semibold py-8 w-100"><a href="{{ path('app_appointments_new') }}">Create new booking</a></button>
-  
+  <a href="{{ path('app_appointments_new') }}">Create new booking</a>
 
   <div id="calendar-holder"></div>
 {% endblock %}

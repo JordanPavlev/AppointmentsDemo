@@ -1,6 +1,24 @@
 body {
     background-color: skyblue;
 }
+/* Adjust the height and font size of the event */
+.fc-event {
+    height: 40px; /* Adjust the height as needed */
+    font-size: 14px; /* Adjust the font size as needed */
+}
+
+/* Optionally, you can adjust the appearance of the event title */
+.fc-event-title {
+    /* Add additional styling for the event title */
+    font-weight: bold; /* Make the event title bold */
+}
+
+/* Optionally, you can adjust the appearance of the current
+ day box in month calendar/column in week calendar */
+.fc-day-today {
+    background-color: red; 
+    color: white;
+}
 
 .logo-image {
     width: 9rem;
