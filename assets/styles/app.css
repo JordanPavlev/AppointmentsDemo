@@ -1,6 +1,19 @@
 body {
     background-color: skyblue;
 }
+.logo-image {
+    width: 9rem;
+}
+.profile-image {
+    width: 3rem;
+}
+.new-appointment-container {
+    /* display: flex; */
+
+}
+.new-appointment-form {
+    width: 50%;
+}
 /* Adjust the height and font size of the event */
 .fc-event {
     height: 40px; /* Adjust the height as needed */
@@ -20,9 +33,33 @@ body {
     color: white;
 }
 
-.logo-image {
-    width: 9rem;
+
+#appointments_time_at_date_month {
+
 }
-.profile-image {
-    width: 3rem;
+
+#appointments_time_at_date_day {
+
+}
+#appointments_time_at_date_year {
+
+} 
+#appointments_time_at_time_hour {
+
+}
+#appointments_time_at_time_minute {
+
+}
+#appointments_time_at_date, #appointments_time_at_time {
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+
+}
+
+#appointments_time_at {
+    display: flex;
+    align-items: center;
+
 }

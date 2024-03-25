@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\AppointmentsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 #[ORM\Entity(repositoryClass: AppointmentsRepository::class)]
+#[HasLifecycleCallbacks]
 class Appointments
 {
     #[ORM\Id]
@@ -107,5 +110,18 @@ class Appointments
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->setUpdatedAtValue();
+    }
+    
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updated_at = new \DateTimeImmutable();
     }
 }
