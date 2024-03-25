@@ -25,18 +25,23 @@
       </div>
     </div>
   </div>
+  <dir class="row">
+  <div class="d-flex justify-content-end">
+    <a class="btn btn-success" href="{{ path('app_appointments_new') }}">Create new</a>
+  </div>
+  </dir>
 
     <table class="table">
-        <thead>
+        <thead class="">
             <tr>
-                <th>Id</th>
-                <th>Time_at</th>
-                <th>Client_name</th>
-                <th>Client_email</th>
-                <th>Client_phone</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>actions</th>
+                <th>Serial number</th>
+                <th>Time</th>
+                <th>Client name</th>
+                <th>Client email</th>
+                <th>Client phone</th>
+                {# <th>Created_at</th>
+                <th>Updated_at</th> #}
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -47,11 +52,11 @@
                 <td>{{ appointment.clientName }}</td>
                 <td>{{ appointment.clientEmail }}</td>
                 <td>{{ appointment.clientPhone }}</td>
-                <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ appointment.updatedAt ? appointment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                {# <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ appointment.updatedAt ? appointment.updatedAt|date('Y-m-d H:i:s') : '' }}</td> #}
                 <td>
-                    <a href="{{ path('app_appointments_show', {'id': appointment.id}) }}">show</a>
-                    <a href="{{ path('app_appointments_edit', {'id': appointment.id}) }}">edit</a>
+                    <a class="btn btn-primary" href="{{ path('app_appointments_show', {'id': appointment.id}) }}">show</a>
+                    <a class="btn btn-success" href="{{ path('app_appointments_edit', {'id': appointment.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -62,5 +67,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_appointments_new') }}">Create new</a>
 {% endblock %}
