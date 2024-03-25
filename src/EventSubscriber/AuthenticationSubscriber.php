@@ -1,5 +1,6 @@
+<?php
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -7,8 +8,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
-
-class AuthenticationListener implements EventSubscriberInterface`
+use Symfony\Component\Security\Http\Event\AuthenticationFailureEvent;
+class AuthenticationSubscriber implements EventSubscriberInterface
 {
     private $security;
     private $urlGenerator;
@@ -19,20 +20,22 @@ class AuthenticationListener implements EventSubscriberInterface`
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
         // Check if the user is not authenticated and is accessing / or /product
         if (!$this->security->isGranted('IS_AUTHENTICATED_FULLY') && 
-            ($request->getPathInfo() === '/' || $request->getPathInfo() === '/product')) {
-            $url = $this->urlGenerator->generate('login');
+            ($request->getPathInfo() !== '/login')) {
+            $url = $this->urlGenerator->generate('app_login');
             $response = new RedirectResponse($url);
             $event->setResponse($response);
         }
-    }
 
-    public static function getSubscribedEvents()
+    }
+    
+
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => 'onKernelRequest',
