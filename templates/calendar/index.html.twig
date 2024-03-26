@@ -88,7 +88,11 @@ block javascripts %}
       },
       timeZone: "UTC",
     });
+    
     calendar.render();
+
+    $(".fc-timeGridWeek-button").click();
+
   });
 </script>
 {% endblock %} {% block body %}
