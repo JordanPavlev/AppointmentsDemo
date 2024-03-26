@@ -45,22 +45,7 @@ class CalendarController extends AbstractController
 
         foreach ($appointments as $appointment) {
             $title = $appointment->getClientName();
-
-            // Generate a color based on the title(client name)
-            $colorIndex = 1; // Default value if $usedColors is empty
-            if (!empty($usedColors)) {
-                $colorIndex = crc32($title) % count($usedColors);
-            }
-            $color = isset($usedColors[$colorIndex]) ? $usedColors[$colorIndex] : null;
-        
-            if (!$color) {
-                // Generate a random color if no color is found based on title
-                do {
-                    $color = '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6); // Generate a random hex color
-                } while (in_array($color, $usedColors)); // Check if the color is already used
-        
-                $usedColors[$colorIndex] = $color; // Store the color based on title index
-            }
+            $color = $appointment->getCalendarColor();
 
             // THESE ARE ALL THE AVAILABLE PROPERTIES THAT THE LIBRARY READS AND RENDERS
             // id: (required) Unique identifier for the event.

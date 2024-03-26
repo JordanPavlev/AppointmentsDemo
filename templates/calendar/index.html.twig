@@ -1,79 +1,102 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %} Calendar {% endblock %} {%
+block javascripts %}
+<script
+  src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js"
+  integrity="sha256-dHUNnePy81fXq4D/wfu7cPsEIP7zl6MvLb84jtZf+UY="
+  crossorigin="anonymous"
+></script>
 
-{% block title %}
-  Calendar
-{% endblock %}
-{% block javascripts %}
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js" integrity="sha256-dHUNnePy81fXq4D/wfu7cPsEIP7zl6MvLb84jtZf+UY=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", () => {
+    var calendarEl = document.getElementById("calendar-holder");
 
-  <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-      var calendarEl = document.getElementById('calendar-holder')
-    
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        selectable: true,
-        defaultView: 'dayGridMonth',
-        editable: true,
-        eventSources: [
-          {
-            url: "{{ path('load-appointments') }}",
-            method: 'POST',
-            extraParams: {
-              filters: JSON.stringify({})
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      selectable: true,
+      defaultView: "dayGridMonth",
+      editable: true,
+      eventSources: [
+        {
+          url: "{{ path('load-appointments') }}",
+          method: "POST",
+          extraParams: {
+            filters: JSON.stringify({}),
+          },
+          failure: () => {
+            // alert("There was an error while fetching FullCalendar!");
+          },
+        },
+      ],
+      eventTimeFormat: {
+        // like '14:30:00'
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      },
+      headerToolbar: {
+        start: "prev,next today",
+        center: "title",
+        end: "dayGridMonth,timeGridWeek,timeGridDay",
+      },
+      dateClick: function (info) {
+        // used for testing purpose
+        // alert("clicked " + info.date)
+        console.log(info);
+        if (info.date) {
+          var formattedTimestamp = info.date.toISOString();
+
+          $.ajax({
+            url: "/new",
+            type: "POST",
+            contentType: "application/json", // Set the content type to JSON
+            data: { timestamp: formattedTimestamp  }, // Convert data to JSON string
+            success: function (response) {
+              window.location.href = "/appointments/new?timestamp=" + formattedTimestamp;
+
             },
-            failure: () => {
-              // alert("There was an error while fetching FullCalendar!");
-            }
-          }
-        ],
-          eventTimeFormat: { // like '14:30:00'
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  },
-        headerToolbar: {
-          start: 'prev,next today',
-          center: 'title',
-          end: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        dateClick: function (info) {
-          alert('clicked ' + info)
-          console.log(info)
-        },
-        // select: function (info) {
-        //   alert('selected ' + info.startStr + ' to ' + info.endStr)
-        // },
-        timeZone: 'UTC'
-      })
-      calendar.render()
-    })
-  </script>
-{% endblock %}
-
-{% block body %}
-  <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
-    <div class="card-body px-4 py-3">
-      <div class="row align-items-center">
-        <div class="col-9">
-          <h4 class="fw-semibold mb-8">Calendar</h4>
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a class="text-muted text-decoration-none" href="/">Home</a>
-              </li>
-              <li class="breadcrumb-item" aria-current="page">Calendar</li>
-            </ol>
-          </nav>
-        </div>
-        <div class="col-3">
-          <div class="text-center mb-n5">
-            <img src="{{ asset('images/ChatBc.png') }}" alt="" class="img-fluid mb-n4" />
-          </div>
+            error: function (xhr, status, error) {
+              // Handle errors if needed
+            },
+          });
+        }
+      },
+      // select: function (info) {
+      //   alert('selected ' + info.startStr + ' to ' + info.endStr)
+      // },
+      timeZone: "UTC",
+    });
+    calendar.render();
+  });
+</script>
+{% endblock %} {% block body %}
+<div
+  class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4"
+>
+  <div class="card-body px-4 py-3">
+    <div class="row align-items-center">
+      <div class="col-9">
+        <h4 class="fw-semibold mb-8">Calendar</h4>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a class="text-muted text-decoration-none" href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">Calendar</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col-3">
+        <div class="text-center mb-n5">
+          <img
+            src="{{ asset('images/ChatBc.png') }}"
+            alt=""
+            class="img-fluid mb-n4"
+          />
         </div>
       </div>
     </div>
   </div>
-  <a href="{{ path('app_appointments_new') }}">Create new booking</a>
+</div>
+<a href="{{ path('app_appointments_new') }}">Create new booking</a>
 
-  <div id="calendar-holder"></div>
+<div id="calendar-holder"></div>
 {% endblock %}

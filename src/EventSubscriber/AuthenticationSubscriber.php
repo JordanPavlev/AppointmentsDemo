@@ -35,13 +35,19 @@ class AuthenticationSubscriber implements EventSubscriberInterface
             $event->setResponse($response);
         }
 
+        if($this->security->isGranted('IS_AUTHENTICATED_FULLY')
+         && ($request->getPathInfo() !== '/')
+         && ($request->getPathInfo() !== '/calendar')
+         && ($request->getPathInfo() !== '/appointments/appointments-all')
+         && ($request->getPathInfo() !== '/appointments/new')
+         && ($request->getPathInfo() !== '/new')
+        ) {
+            $url = $this->urlGenerator->generate('app_dashboard');
+            $response = new RedirectResponse($url);
+            $event->setResponse($response);
+        }
+
     }
-    private function isAuthenticationFailure(): bool
-    {
-        // Check if there was an authentication error (failed login attempt)
-        return $this->authenticationUtils->getLastAuthenticationError() !== null;
-    }
-    
 
     public static function getSubscribedEvents(): array
     {

@@ -26,6 +26,9 @@ class Appointments
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $client_email = null;
 
+    #[ORM\Column(length: 255, nullable: false)]
+    private ?string $calendar_color = null;
+
     #[ORM\Column(length: 255)]
     private ?string $client_phone = null;
 
@@ -87,6 +90,17 @@ class Appointments
 
         return $this;
     }
+    public function getCalendarColor(): ?string
+    {
+        return $this->calendar_color;
+    }
+
+    public function setCalendarColor(string $calendar_color): static
+    {
+        $this->calendar_color = $calendar_color;
+
+        return $this;
+    }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -118,10 +132,26 @@ class Appointments
         $this->created_at = new \DateTimeImmutable();
         $this->setUpdatedAtValue();
     }
+    #[ORM\PrePersist]
+    public function setCalendarColorValue(): void
+    {
+        $clientName = $this->getClientName();
+        $color = $this->generateColorForClient($clientName);
+
+        $this->calendar_color = $color;
+    }
     
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
         $this->updated_at = new \DateTimeImmutable();
+    }
+
+    private function generateColorForClient($clientName)
+    {
+        // Implement your logic to generate colors based on client name
+        // You can use any algorithm or method you prefer to generate colors
+        // For simplicity, let's assume a random color generation here
+        return '#' . substr(md5($clientName), 0, 6); // Generate a hex color based on client name
     }
 }
