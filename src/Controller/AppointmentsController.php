@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
 
@@ -65,12 +66,23 @@ class AppointmentsController extends AbstractController
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client email',
                 ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Email(),
+                ],
             ])
             ->add('client_phone', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client phone number',
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Regex([
+                        'pattern' => '/^[0-9]{10}$/',
+                        'message' => 'Please enter a valid phone number (10 digits).',
+                    ]),
                 ],
             ])
 
@@ -91,7 +103,7 @@ class AppointmentsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_appointments_show', methods: ['GET'])]
+    #[Route('/{id}/show', name: 'app_appointments_show', methods: ['GET'])]
     public function show(Appointments $appointment): Response
     {
         return $this->render('appointments/show.html.twig', [

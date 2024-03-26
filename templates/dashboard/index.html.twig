@@ -1,101 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}
+  Dashboard
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-<div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
-    <div class="card-body px-4 py-3">
-      <div class="row align-items-center">
-        <div class="col-9">
-          <h4 class="fw-semibold mb-8">Dashboard</h4>
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a class="text-muted text-decoration-none" href="/">Home</a>
-              </li>
-              <li class="breadcrumb-item" aria-current="page">Dashboard</li>
-            </ol>
-          </nav>
-        </div>
-        <div class="col-3">
-          <div class="text-center mb-n5">
-            <img
-              src="{{ asset('images/ChatBc.png') }}"
-              alt=""
-              class="img-fluid mb-n4"
-            />
+  <div class="page-wrapper">
+    <div class="body-wrapper">
+      <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
+        <div class="card-body px-4 py-3">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <h4 class="fw-semibold mb-8">Dashboard</h4>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a class="text-muted text-decoration-none" href="/">Home</a>
+                  </li>
+                  <li class="breadcrumb-item" aria-current="page">Dashboard</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-3">
+              <div class="text-center mb-n5">
+                <img src="{{ asset('images/ChatBc.png') }}" alt="" class="img-fluid mb-n4" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 col-md-6">
-      <div class="card bg-info">
-        <div class="card-body">
-          <div class="text-center text-white">
-            <h4 class="card-title text-white">Sofia, Bulgaria</h4>
-            <h5 class="fw-light text-white">MONDAY April 11, 2024</h5>
-            <div class="mt-4">
-              <span class="display-5 text-white"><i class="wi wi-day-rain-mix"></i></span>
-              <div class="d-inline-block ms-4">
-                <h2 class="text-white">29° C</h2>
-                <h4 class="fw-light text-white">Day Rain</h4>
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-md-12">
-                <div class="row text-center">
-                  <div class="col-6 col-md-2">
-                    <div class="mb-2">TUE</div>
-                    <i class="ti ti-cloud fs-7 mb-2"></i>
-                    <div>
-                      24°
-                      <span>C</span>
-                    </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <div class="card bg-info">
+            <div class="card-body">
+              <div class="text-center text-white">
+                <h4 class="card-title text-white">Sofia, Bulgaria</h4>
+                <h5 class="fw-light text-white">MONDAY April 11, 2024</h5>
+                <div class="mt-4">
+                  <span class="display-5 text-white"><i class="wi wi-day-rain-mix"></i></span>
+                  <div class="d-inline-block ms-4">
+                    <h2 class="text-white">29° C</h2>
+                    <h4 class="fw-light text-white">Day Rain</h4>
                   </div>
-                  <div class="col-6 col-md-2">
-                    <div class="mb-2">WED</div>
-                    <i class="ti ti-cloud fs-7 mb-2"></i>
-                    <div>
-                      21°
-                      <span>C</span>
-                    </div>
-                  </div>
-                  <div class="col-6 col-md-2">
-                    <div class="mb-2">THU</div>
-                    <i class="ti ti-cloud fs-7 mb-2"></i>
-                    <div>
-                      25°
-                      <span>C</span>
-                    </div>
-                  </div>
-                  <div class="col-6 col-md-2">
-                    <div class="mb-2">FRI</div>
-                    <i class="ti ti-cloud fs-7 mb-2"></i>
-                    <div>
-                      20°
-                      <span>C</span>
-                    </div>
-                  </div>
-                  <div class="col-6 col-md-2">
-                    <div class="mb-2">SAT</div>
-                    <i class="ti ti-cloud fs-7 mb-2"></i>
-                    <div>
-                      18°
-                      <span>C</span>
-                    </div>
-                  </div>
-                  <div class="col-6 col-md-2">
-                    <div class="mb-2">SUN</div>
-                    <i class="ti ti-cloud fs-7 mb-2"></i>
-                    <div>
-                      14°
-                      <span>C</span>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-md-12">
+                    <div class="row text-center">
+                      <div class="col-6 col-md-2">
+                        <div class="mb-2">TUE</div>
+                        <i class="ti ti-cloud fs-7 mb-2"></i>
+                        <div>
+                          24°
+                          <span>C</span>
+                        </div>
+                      </div>
+                      <div class="col-6 col-md-2">
+                        <div class="mb-2">WED</div>
+                        <i class="ti ti-cloud fs-7 mb-2"></i>
+                        <div>
+                          21°
+                          <span>C</span>
+                        </div>
+                      </div>
+                      <div class="col-6 col-md-2">
+                        <div class="mb-2">THU</div>
+                        <i class="ti ti-cloud fs-7 mb-2"></i>
+                        <div>
+                          25°
+                          <span>C</span>
+                        </div>
+                      </div>
+                      <div class="col-6 col-md-2">
+                        <div class="mb-2">FRI</div>
+                        <i class="ti ti-cloud fs-7 mb-2"></i>
+                        <div>
+                          20°
+                          <span>C</span>
+                        </div>
+                      </div>
+                      <div class="col-6 col-md-2">
+                        <div class="mb-2">SAT</div>
+                        <i class="ti ti-cloud fs-7 mb-2"></i>
+                        <div>
+                          18°
+                          <span>C</span>
+                        </div>
+                      </div>
+                      <div class="col-6 col-md-2">
+                        <div class="mb-2">SUN</div>
+                        <i class="ti ti-cloud fs-7 mb-2"></i>
+                        <div>
+                          14°
+                          <span>C</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

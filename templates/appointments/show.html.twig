@@ -5,45 +5,70 @@
 {% endblock %}
 
 {% block body %}
-  <h1>Appointment {{ appointment.id }}</h1>
-  <dir class="d-flex  justify-content-end gap-2">
-    <a class="btn btn-primary" href="{{ path('app_appointments_edit', { id: appointment.id }) }}">Edit</a>
-    {{ include('appointments/_delete_form.html.twig') }}
-  </dir>
+  <div class="page-wrapper">
+    <div class="body-wrapper">
+      <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
+        <div class="card-body px-4 py-3">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <h4 class="fw-semibold mb-8">Appointment {{ appointment.id }}</h4>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a class="text-muted text-decoration-none" href="/">Home</a>
+                  </li>
+                  <li class="breadcrumb-item" aria-current="page">Appointment {{ appointment.id }}</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-3">
+              <div class="text-center mb-n5">
+                <img src="{{ asset('images/ChatBc.png') }}" alt="" class="img-fluid mb-n4" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <dir class="d-flex justify-content-end gap-2">
+        <a class="btn btn-primary" href="{{ path('app_appointments_edit', { id: appointment.id }) }}">Edit</a>
+        {{ include('appointments/_delete_form.html.twig') }}
+      </dir>
 
-  <table class="table">
-    <tbody>
-      <tr>
-        <th>Serial number</th>
-        <td>{{ appointment.id }}</td>
-      </tr>
-      <tr>
-        <th>Time</th>
-        <td>{{ appointment.timeAt ? appointment.timeAt|date('Y-m-d H:i:s') : '' }}</td>
-      </tr>
-      <tr>
-        <th>Client name</th>
-        <td>{{ appointment.clientName }}</td>
-      </tr>
-      <tr>
-        <th>Client email</th>
-        <td>{{ appointment.clientEmail }}</td>
-      </tr>
-      <tr>
-        <th>Client phone</th>
-        <td>{{ appointment.clientPhone }}</td>
-      </tr>
-      <tr>
-        <th>Created</th>
-        <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-      </tr>
-      <tr>
-        <th>Last update</th>
-        <td>{{ appointment.updatedAt ? appointment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="d-flex justify-content-end">
-    <a class="btn btn-primary" href="{{ path('app_appointments_index') }}">Back to list</a>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>Serial number</th>
+            <td>{{ appointment.id }}</td>
+          </tr>
+          <tr>
+            <th>Time</th>
+            <td>{{ appointment.timeAt ? appointment.timeAt|date('Y-m-d H:i:s') : '' }}</td>
+          </tr>
+          <tr>
+            <th>Client name</th>
+            <td>{{ appointment.clientName }}</td>
+          </tr>
+          <tr>
+            <th>Client email</th>
+            <td>{{ appointment.clientEmail }}</td>
+          </tr>
+          <tr>
+            <th>Client phone</th>
+            <td>{{ appointment.clientPhone }}</td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+          </tr>
+          <tr>
+            <th>Last update</th>
+            <td>{{ appointment.updatedAt ? appointment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-end">
+        <a class="btn btn-primary" href="{{ path('app_appointments_index') }}">Back to list</a>
+      </div>
+    </div>
   </div>
 {% endblock %}

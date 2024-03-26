@@ -44,6 +44,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface
                 '/appointments/appointments-all',
                 '/appointments/new',
                 '/appointments/\d+/edit', // Dynamic route pattern for appointment editing
+                '/appointments/\d+/show', // Dynamic route pattern for appointment editing
                 '/appointments/\d+/delete', // Dynamic route pattern for appointment deleting
                 '/logout'
             ];

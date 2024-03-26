@@ -3,6 +3,8 @@
 {% block title %}Edit Appointments{% endblock %}
 
 {% block body %}
+    <div class="page-wrapper">
+      <div class="body-wrapper">
    <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
     <div class="card-body px-4 py-3">
       <div class="row align-items-center">
@@ -29,10 +31,7 @@
     <div class="new-appointment-form">
 
     {{ include('appointments/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_appointments_index') }}">back to list</a>
-
-    {{ include('appointments/_delete_form.html.twig') }}
     </div>
   </div>
+   </div></div>
 {% endblock %}
