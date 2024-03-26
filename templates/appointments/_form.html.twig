@@ -1,4 +1,53 @@
+<div class="modal" id="conflictModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment Conflict</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>There's a conflict with an existing appointment.</p>
+                <p>Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+       <button type="button" id="submit-btn" class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+<script>
+$(document).ready(function() {
+    $('#submit-btn').on('click', function(event) {
+        // Prevent the default button click behavior
+        event.preventDefault();
+
+        // Get the appointment time from the form
+        var appointmentTime = $('#form_time_at').val();
+
+        // Make AJAX request to check for conflicts
+        $.ajax({
+               url: '/check-appointment-conflict',
+            method: 'POST',
+            data: $.param({ time_at: appointmentTime }), // Serialize data as query parameters
+            success: function(response) {
+                if (response.conflict) {
+                    alert(response)
+                    // If conflict is found, show modal
+                    $('#conflictModal').modal('show');
+                }
+                 
+            },
+            error: function(xhr, status, error) {
+                // Handle errors if needed
+            }
+        });
+    });
+});
+</script>

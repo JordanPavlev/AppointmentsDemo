@@ -3,20 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Appointments;
-use App\Form\AppointmentsType;
 use App\Repository\AppointmentsRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Routing\Annotation\Route;
-use Psr\Log\LoggerInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Route('/appointments')]
 class AppointmentsController extends AbstractController
@@ -35,16 +34,17 @@ class AppointmentsController extends AbstractController
     {
         $timestamp = $request->query->get('timestamp');
 
-
         $appointment = new Appointments();
-        
+
         // $logger->info($timestamp);
         if ($timestamp != null) {
             $parsedTimestmap = Carbon::parse($timestamp);
             $appointment->setTimeAt($parsedTimestmap);
         }
 
-        $form = $this->createFormBuilder($appointment)
+        $form = $this->createFormBuilder($appointment, [
+            'attr' => ['id' => 'new-form'],
+        ])
             ->add('time_at', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => false,
@@ -95,6 +95,7 @@ class AppointmentsController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
+
         }
 
         return $this->render('appointments/new.html.twig', [
@@ -121,8 +122,10 @@ class AppointmentsController extends AbstractController
             $parsedTimestmap = Carbon::parse($timestamp);
             $appointment->setTimeAt($parsedTimestmap);
         }
-        
-         $form = $this->createFormBuilder($appointment)
+
+        $form = $this->createFormBuilder($appointment, [
+            'attr' => ['id' => 'edit_form'],
+        ])
             ->add('time_at', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => false,
@@ -168,6 +171,18 @@ class AppointmentsController extends AbstractController
         ]);
     }
 
+    #[Route('/check-conflict', name: 'app_appointments_check', methods: ['POST'])]
+    public function checkAppointmentConflict(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        // Get the submitted appointment time
+        $appointmentTime = new \DateTime($request->query->get('time_at'));
+
+        $conflict = $this->checkForAppointmentConflict($appointmentTime, $entityManager);
+
+        // Return JSON response indicating whether there's a conflict
+        return new JsonResponse(['conflict' => $conflict]);
+    }
+
     #[Route('/{id}/delete', name: 'app_appointments_delete', methods: ['POST'])]
     public function delete(Request $request, Appointments $appointment, EntityManagerInterface $entityManager): Response
     {
@@ -177,5 +192,32 @@ class AppointmentsController extends AbstractController
         }
 
         return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    public function checkForAppointmentConflict(\DateTime $appointmentTime, EntityManagerInterface $entityManager)
+    {
+        // Assuming you have appointments stored in a database
+        $repository = $entityManager->getRepository(Appointments::class);
+
+        // Calculate the start and end times for the interval
+        $startTime = clone $appointmentTime;
+        $endTime = clone $appointmentTime;
+        $endTime->modify('+50 minutes');
+
+        // Query appointments within the specified time interval
+        $conflictingAppointments = $repository->createQueryBuilder('a')
+            ->andWhere('a.time_at BETWEEN :startTime AND :endTime')
+            ->setParameter('startTime', $startTime)
+            ->setParameter('endTime', $endTime)
+            ->getQuery()
+            ->getResult();
+
+        // If there are conflicting appointments, return true
+        if (!empty($conflictingAppointments)) {
+            return true;
+        }
+
+        // No conflicting appointments found, return false
+        return false;
     }
 }
