@@ -2,12 +2,13 @@
 
 namespace App\EventSubscriber;
 
+use SebastianBergmann\Environment\Console;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security ;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthenticationSubscriber implements EventSubscriberInterface
@@ -42,6 +43,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface
                 '/calendar',
                 '/load-appointments',
                 '/appointments/appointments-all',
+                '/appointments/check-conflict',
                 '/appointments/new',
                 '/appointments/\d+/edit', // Dynamic route pattern for appointment editing
                 '/appointments/\d+/show', // Dynamic route pattern for appointment editing

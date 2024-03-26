@@ -1,17 +1,18 @@
+{# Modal is displayed if there is time conflict  #}
 <div class="modal" id="conflictModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Appointment Conflict</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Appointment time conflict</h5>
             </div>
             <div class="modal-body">
-                <p>There's a conflict with an existing appointment.</p>
+                <p>The appointment you try to make is less than 15 before/after another
+                appointment.</p>
                 <p>Are you sure you want to proceed?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Proceed</button>
+                <button type="button" id="closeButtonModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id="submitFormModal" class="btn btn-primary">Proceed</button>
             </div>
         </div>
     </div>
@@ -21,33 +22,3 @@
     {{ form_widget(form) }}
        <button type="button" id="submit-btn" class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
-
-<script>
-$(document).ready(function() {
-    $('#submit-btn').on('click', function(event) {
-        // Prevent the default button click behavior
-        event.preventDefault();
-
-        // Get the appointment time from the form
-        var appointmentTime = $('#form_time_at').val();
-
-        // Make AJAX request to check for conflicts
-        $.ajax({
-               url: '/check-appointment-conflict',
-            method: 'POST',
-            data: $.param({ time_at: appointmentTime }), // Serialize data as query parameters
-            success: function(response) {
-                if (response.conflict) {
-                    alert(response)
-                    // If conflict is found, show modal
-                    $('#conflictModal').modal('show');
-                }
-                 
-            },
-            error: function(xhr, status, error) {
-                // Handle errors if needed
-            }
-        });
-    });
-});
-</script>

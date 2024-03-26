@@ -99,4 +99,47 @@ if ((at = "horizontal")) {
     });
 }
 
+$(document).ready(function() {
+  
+  $('#submit-btn').on('click', function(event) {
+      // Prevent the default button click behavior
+      event.preventDefault();
 
+      // Get the appointment time from the form
+      var appointmentTime = $('#form_time_at').val();
+      console.log(appointmentTime)
+
+      // Make AJAX request to check for conflicts
+      $.ajax({
+             url: `/appointments/check-conflict?time_at=${appointmentTime}`,
+          method: 'GET',
+          success: function(response) {
+              console.log(response)
+              if (response.conflict == true) {
+                  // If conflict is found, show modal
+                  $('#conflictModal').modal('show');
+              }
+              else {
+                  // If no conflict, submit the form
+                  $('#new-form').submit();
+              }
+               
+          },
+          error: function(xhr, status, error) {
+              // Handle errors if needed
+          }
+      });
+  });
+  
+  // Attach click event handler to the "Proceed" button inside the modal
+  $('#submitFormModal').on('click', function() {
+      // Submit the form
+      $('#new-form').submit();
+  });
+
+  // Attach click event handler to the "Close" button inside the modal
+  $('#closeButtonModal').on('click', function() {
+      // Close the modal
+      $('#conflictModal').modal('hide');
+  });
+});

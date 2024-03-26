@@ -171,11 +171,11 @@ class AppointmentsController extends AbstractController
         ]);
     }
 
-    #[Route('/check-conflict', name: 'app_appointments_check', methods: ['POST'])]
+    #[Route('/check-conflict', name: 'app_appointments_check', methods: ['GET'])]
     public function checkAppointmentConflict(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         // Get the submitted appointment time
-        $appointmentTime = new \DateTime($request->query->get('time_at'));
+        $appointmentTime = Carbon::parse($request->query->get('time_at'));
 
         $conflict = $this->checkForAppointmentConflict($appointmentTime, $entityManager);
 
@@ -196,28 +196,29 @@ class AppointmentsController extends AbstractController
 
     public function checkForAppointmentConflict(\DateTime $appointmentTime, EntityManagerInterface $entityManager)
     {
-        // Assuming you have appointments stored in a database
-        $repository = $entityManager->getRepository(Appointments::class);
+         // Assuming you have appointments stored in a database
+    $repository = $entityManager->getRepository(Appointments::class);
 
-        // Calculate the start and end times for the interval
-        $startTime = clone $appointmentTime;
-        $endTime = clone $appointmentTime;
-        $endTime->modify('+50 minutes');
+    // Calculate the start and end times for the interval
+    $startTime = Carbon::parse($appointmentTime)->copy();
+    $endTime = Carbon::parse($appointmentTime)->copy();
+    $startTime->subMinutes(15);
+    $endTime->addMinutes(15);
 
-        // Query appointments within the specified time interval
-        $conflictingAppointments = $repository->createQueryBuilder('a')
-            ->andWhere('a.time_at BETWEEN :startTime AND :endTime')
-            ->setParameter('startTime', $startTime)
-            ->setParameter('endTime', $endTime)
-            ->getQuery()
-            ->getResult();
+     // Query appointments within the specified time interval
+     $conflictingAppointments = $repository->createQueryBuilder('a')
+     ->andWhere(':endTime >= a.time_at')
+     ->andWhere(':startTime <= a.time_at')
+     ->setParameter('startTime', $startTime)
+     ->setParameter('endTime', $endTime)
+     ->getQuery()
+     ->getResult();
+    // If there are conflicting appointments, return true
+    if (!empty($conflictingAppointments)) {
+        return true;
+    }
 
-        // If there are conflicting appointments, return true
-        if (!empty($conflictingAppointments)) {
-            return true;
-        }
-
-        // No conflicting appointments found, return false
-        return false;
+    // No conflicting appointments found, return false
+    return false;
     }
 }
