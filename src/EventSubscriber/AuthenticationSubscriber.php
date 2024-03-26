@@ -35,16 +35,34 @@ class AuthenticationSubscriber implements EventSubscriberInterface
             $event->setResponse($response);
         }
 
-        if($this->security->isGranted('IS_AUTHENTICATED_FULLY')
-         && ($request->getPathInfo() !== '/')
-         && ($request->getPathInfo() !== '/calendar')
-         && ($request->getPathInfo() !== '/appointments/appointments-all')
-         && ($request->getPathInfo() !== '/appointments/new')
-         && ($request->getPathInfo() !== '/new')
-        ) {
-            $url = $this->urlGenerator->generate('app_dashboard');
-            $response = new RedirectResponse($url);
-            $event->setResponse($response);
+        if ($this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
+            // Define an array of allowed routes using regular expressions
+            $allowedRoutes = [
+                '/',
+                '/calendar',
+                '/load-appointments',
+                '/appointments/appointments-all',
+                '/appointments/new',
+                '/appointments/\d+/edit', // Dynamic route pattern for appointment editing
+                '/appointments/\d+/delete', // Dynamic route pattern for appointment deleting
+                '/logout'
+            ];
+        
+            // Check if the requested path matches any of the allowed routes
+            $isAllowed = false;
+            foreach ($allowedRoutes as $route) {
+                if (preg_match('#^' . $route . '$#', $request->getPathInfo())) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+        
+            // Redirect to the dashboard if the requested path is not allowed
+            if (!$isAllowed) {
+                $url = $this->urlGenerator->generate('app_dashboard');
+                $response = new RedirectResponse($url);
+                $event->setResponse($response);
+            }
         }
 
     }

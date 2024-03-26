@@ -102,7 +102,46 @@ class AppointmentsController extends AbstractController
     #[Route('/{id}/edit', name: 'app_appointments_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Appointments $appointment, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(AppointmentsType::class, $appointment);
+        $timestamp = $request->query->get('timestamp');
+
+        // $logger->info($timestamp);
+        if ($timestamp != null) {
+            $parsedTimestmap = Carbon::parse($timestamp);
+            $appointment->setTimeAt($parsedTimestmap);
+        }
+        
+         $form = $this->createFormBuilder($appointment)
+            ->add('time_at', DateTimeType::class, [
+                'widget' => 'single_text',
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control mb-6 ',
+                    'placeholder' => 'Client email',
+                ],
+            ])
+            ->add('client_name', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control mb-6 ',
+                    'placeholder' => 'Client name',
+                ],
+            ])
+            ->add('client_email', EmailType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control mb-6 ',
+                    'placeholder' => 'Client email',
+                ],
+            ])
+            ->add('client_phone', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'form-control mb-6 ',
+                    'placeholder' => 'Client phone number',
+                ],
+            ])
+
+            ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -117,7 +156,7 @@ class AppointmentsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_appointments_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_appointments_delete', methods: ['POST'])]
     public function delete(Request $request, Appointments $appointment, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $appointment->getId(), $request->request->get('_token'))) {

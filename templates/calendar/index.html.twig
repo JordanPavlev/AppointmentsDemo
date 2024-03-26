@@ -12,8 +12,9 @@ block javascripts %}
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
       selectable: true,
-      defaultView: "dayGridMonth",
+      defaultView: "timeGridWeek",
       editable: true,
+      droppable: true, // allow external elements to be dropped onto the calendar
       eventSources: [
         {
           url: "{{ path('load-appointments') }}",
@@ -38,9 +39,6 @@ block javascripts %}
         end: "dayGridMonth,timeGridWeek,timeGridDay",
       },
       dateClick: function (info) {
-        // used for testing purpose
-        // alert("clicked " + info.date)
-        console.log(info);
         if (info.date) {
           var formattedTimestamp = info.date.toISOString();
 
@@ -48,10 +46,10 @@ block javascripts %}
             url: "/new",
             type: "POST",
             contentType: "application/json", // Set the content type to JSON
-            data: { timestamp: formattedTimestamp  }, // Convert data to JSON string
+            data: { timestamp: formattedTimestamp }, // Convert data to JSON string
             success: function (response) {
-              window.location.href = "/appointments/new?timestamp=" + formattedTimestamp;
-
+              window.location.href =
+                "/appointments/new?timestamp=" + formattedTimestamp;
             },
             error: function (xhr, status, error) {
               // Handle errors if needed
@@ -62,6 +60,32 @@ block javascripts %}
       // select: function (info) {
       //   alert('selected ' + info.startStr + ' to ' + info.endStr)
       // },
+      eventDrop: function (info) {
+        if (info) {
+          var formattedTimestamp = info.event.start.toISOString();
+          var eventId = info.event.id
+          $.ajax({
+            url: `${eventId}/edit`,
+            type: "POST",
+            contentType: "application/json", // Set the content type to JSON
+            data: { timestamp: formattedTimestamp }, // Convert data to JSON string
+            success: function (response) {
+              window.location.href = `/appointments/${eventId}/edit?timestamp=` + formattedTimestamp;
+            },
+            error: function (xhr, status, error) {
+              // Handle errors if needed
+            },
+          });
+        }
+      },
+
+      // Event Drag Functionality
+      eventDragStart: function (info) {
+        console.log("Event drag started:", info);
+      },
+      eventDragStop: function (info) {
+        console.log("Event drag stopped:", info);
+      },
       timeZone: "UTC",
     });
     calendar.render();
@@ -96,7 +120,9 @@ block javascripts %}
     </div>
   </div>
 </div>
-<a href="{{ path('app_appointments_new') }}">Create new booking</a>
 
+<!--#################### FullCalendar Container ####################-->
 <div id="calendar-holder"></div>
+<!--#################### FullCalendar Container ####################-->
+
 {% endblock %}

@@ -1,6 +1,4 @@
-body {
-    background-color: skyblue;
-}
+
 .logo-image {
     width: 9rem;
 }
@@ -29,8 +27,17 @@ body {
 /* Optionally, you can adjust the appearance of the current
  day box in month calendar/column in week calendar */
 .fc-day-today {
-    background-color: #13deb9; 
+    background-color: #49beff; 
 }
+.fc-timegrid-slot:hover {
+    background-color: #49beff;
+    opacity: 0.2;
+}
+.fc-timegrid-slot:active {
+    background-color: #2496d3;
+    opacity: 0.2;
+}
+
 
 
 #appointments_time_at_date_month {
