@@ -1,0 +1,44 @@
+<!-- Modal -->
+<div class="modal fade" id="nullValueModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+      </div>
+      <div class="modal-body">
+       The time of the appointment can't be empty. Please enter a value.
+      </div>
+      <div class="modal-footer">
+        <button id="closeNullValueModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{# Modal is displayed if there is time conflict  #}
+<div class="modal" id="conflictModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment time conflict</h5>
+            </div>
+            <div class="modal-body">
+                <p>The appointment you try to make is less than 15 before/after another
+                appointment.</p>
+                <p>Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeButtonModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id="submitFormModal" class="btn btn-primary">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+</script>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+       <button type="button" id="submit-btn" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

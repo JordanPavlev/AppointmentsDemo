@@ -1,18 +1,113 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-        {% endblock %}
+<html data-layout="vertical">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block title %}
+        Welcome!
+      {% endblock %}
+    </title>
+    <link rel="icon" href="{{asset('/images/favicon.ico')}}" type="image/x-icon">
 
-        {% block javascripts %}
-            {{ importmap() }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block stylesheets %}
+      <link rel="stylesheet" href="{{ asset('styles/app.css') }}" />
+      <link rel="stylesheet" href="{{ asset('styles/global.css') }}" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@icon/themify-icons@1.0.1-alpha.3/themify-icons.min.css" />
+    {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js" integrity="sha256-dHUNnePy81fXq4D/wfu7cPsEIP7zl6MvLb84jtZf+UY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% block javascripts %}
+      <script src="{{ asset('app.js') }}"></script>
+    {% endblock %}
+  </head>
+  <body>
+    {% if app.user %}
+      <div id="sidebar">
+        <!-- Sidebar content goes here -->
+        <aside class="left-sidebar with-vertical">
+          <div>
+            <div class="d-flex border-bottom align-items-center justify-content-center">
+              <div>
+                <img src="{{ asset('images/logo_transparent.png') }}" class="logo-image" alt="" />
+              </div>
+            </div>
+            <div class="d-flex pt-3 pb-3 border-bottom">
+              <div class="mx-auto d-flex flex-column align-items-center">
+                <p class="fs-6 fw-semibold">{{ app.user.username }}</p>
+                <img src="{{ asset('images/user-1.jpg') }}" class="profile-image rounded-circle" alt="" />
+              </div>
+            </div>
+
+            <nav class="sidebar-nav mt-3 scroll-sidebar simplebar-scrollable-y" data-simplebar="init">
+              <div class="simplebar-wrapper" style="margin: 0px -24px">
+                <div class="simplebar-height-auto-observer-wrapper">
+                  <div class="simplebar-height-auto-observer"></div>
+                </div>
+                <div class="simplebar-mask">
+                  <div class="simplebar-offset" style="right: 0px; bottom: 0px">
+                    <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: hidden scroll">
+                      <div class="simplebar-content" style="padding: 0px 24px">
+                        <ul id="sidebarnav">
+                          <li class="sidebar-item">
+                            <a class="sidebar-link" href="/" aria-expanded="false">
+                              <span><i class="ti ti-home"></i></span>
+                              <span class="hide-menu">Dashboard</span>
+                            </a>
+                          </li>
+                          <li class="sidebar-item">
+                            <a class="sidebar-link" href="/calendar" aria-expanded="false">
+                              <span><i class="ti ti-calendar"></i></span>
+                              <span class="hide-menu">Calendar</span>
+                            </a>
+                          </li>
+                          <li class="sidebar-item">
+                            <a class="sidebar-link" href="/appointments/appointments-all" aria-expanded="false">
+                              <span><i class="ti ti-folder"></i></span>
+                              <span class="hide-menu">All Appointments</span>
+                            </a>
+                          </li>
+                          <li class="mt-3 mb-auto sidebar-item">
+                            <a class="sidebar-link" href="{{ path('app_logout') }}" aria-expanded="false">
+                              <span><i class="ti ti-back-right"></i></span>
+                              <span class="hide-menu">Logout</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="simplebar-placeholder" style="width: 269px; height: 3499px"></div>
+              </div>
+              <div class="simplebar-track simplebar-horizontal" style="visibility: hidden">
+                <div class="simplebar-scrollbar" style="
+                  width: 0px;
+                  display: none;
+                  transform: translate3d(0px, 0px, 0px);
+                "></div>
+              </div>
+              <div class="simplebar-track simplebar-vertical" style="visibility: visible">
+                <div class="simplebar-scrollbar" style="
+                  height: 25px;
+                  transform: translate3d(0px, 0px, 0px);
+                  display: block;
+                "></div>
+              </div>
+            </nav>
+          </div>
+        </aside>
+        <li class="nav-item">
+          <a class="nav-link sidebartoggler nav-icon-hover ms-n3" id="headerCollapse" href="javascript:void(0)"><i class="ti ti-menu-2"></i></a>
+        </li>
+      </div>
+    {% endif %}
+
+    <div class="container-fluid">
+      {% block body %}
+
+      {% endblock %}
+    </div>
+  </body>
 </html>
