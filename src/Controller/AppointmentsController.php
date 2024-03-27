@@ -35,11 +35,11 @@ class AppointmentsController extends AbstractController
         $timestamp = $request->query->get('timestamp');
 
         $appointment = new Appointments();
+        $error = null;
 
         // put default value in the appointment time field (current datetime)
         // $appointment->setTimeAt(new \DateTime('now', new \DateTimeZone('Europe/Sofia')));
 
-        // $logger->info($timestamp);
         if ($timestamp != null) {
             $parsedTimestmap = Carbon::parse($timestamp);
             $appointment->setTimeAt($parsedTimestmap);
@@ -103,6 +103,17 @@ class AppointmentsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $conflict = $this->checkDuplicateTimeConflict($appointment->getTimeAt(), $entityManager);
+            
+            if ($conflict) {
+                $error = 'Another appointment already exists at this time. Please choose another time.';
+                // Handle conflict scenario, perhaps return an error message to the user
+                return $this->render('appointments/new.html.twig', [
+                    'appointment' => $appointment,
+                    'form' => $form,
+                    'dublicateError' => $error,
+                ]);
+            }
             $entityManager->persist($appointment);
             $entityManager->flush();
 
@@ -113,6 +124,7 @@ class AppointmentsController extends AbstractController
         return $this->render('appointments/new.html.twig', [
             'appointment' => $appointment,
             'form' => $form,
+            'dublicateError' => $error,
         ]);
     }
 
@@ -128,7 +140,7 @@ class AppointmentsController extends AbstractController
     public function edit(Request $request, Appointments $appointment, EntityManagerInterface $entityManager): Response
     {
         $timestamp = $request->query->get('timestamp');
-
+        $error = null;
         // $logger->info($timestamp);
         if ($timestamp != null) {
             $parsedTimestmap = Carbon::parse($timestamp);
@@ -187,9 +199,19 @@ class AppointmentsController extends AbstractController
 
             ->getForm();
         $form->handleRequest($request);
-        
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $conflict = $this->checkDuplicateTimeConflict($appointment->getTimeAt(), $entityManager);
+            
+            if ($conflict) {
+                $error = 'Another appointment already exists at this time. Please choose another time.';
+                // Handle conflict scenario, perhaps return an error message to the user
+                return $this->render('appointments/new.html.twig', [
+                    'appointment' => $appointment,
+                    'form' => $form,
+                    'dublicateError' => $error,
+                ]);
+            }
             $entityManager->flush();
 
             return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
@@ -198,6 +220,7 @@ class AppointmentsController extends AbstractController
         return $this->render('appointments/edit.html.twig', [
             'appointment' => $appointment,
             'form' => $form,
+            'dublicateError' => $error,
         ]);
     }
 
@@ -250,5 +273,20 @@ class AppointmentsController extends AbstractController
 
         // No conflicting appointments found, return false
         return false;
+    }
+
+    /**
+     * Check for duplicate appointment time conflict
+     */
+    private function checkDuplicateTimeConflict(\DateTime $appointmentTime, EntityManagerInterface $entityManager): bool
+    {
+        // Assuming you have appointments stored in a database
+        $repository = $entityManager->getRepository(Appointments::class);
+
+        // Query appointments with the same time
+        $existingAppointment = $repository->findOneBy(['time_at' => $appointmentTime]);
+
+        // If an appointment with the same time exists, return true
+        return $existingAppointment !== null;
     }
 }
