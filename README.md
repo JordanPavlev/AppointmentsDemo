@@ -20,9 +20,12 @@ composer install
 
 ```
 
+Make sure the database user has the needed permissions.
 File `.env` should be updated with variables(or create `.env.local` in the root of project): 
 - `DATABASE_URL=mysql://username:password@localhost:3306/database_name`
 - `APP_ENV=dev`
+
+Now update the database schema and load the security accounts. The only way to create new account is with (fixtures, using some REPL or direct insert into database).
 
 ```
 php bin/console doctrine:schema:create
@@ -39,4 +42,6 @@ root dir should be point to `public/index.php` <br>
 APP_ENV should switch to `production`
 
 ### For container deployement look to compose.yaml
-  
+
+# Preview
+![Alt text](https://i.imgur.com/udfiC7G.png)
