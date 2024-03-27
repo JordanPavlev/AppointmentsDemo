@@ -5,7 +5,7 @@
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉')
+console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");
 
 var at = document.documentElement.getAttribute("data-layout");
 if ((at = "vertical")) {
@@ -23,7 +23,7 @@ if ((at = "vertical")) {
   var elements = findMatchingElement();
 
   // Do something with the matching element
-  if(elements){
+  if (elements) {
     elements.classList.add("active");
   }
 
@@ -88,7 +88,7 @@ if ((at = "horizontal")) {
   }
   var elements = findMatchingElement();
 
-  if(elements){
+  if (elements) {
     elements.classList.add("active");
   }
   document
@@ -99,47 +99,51 @@ if ((at = "horizontal")) {
     });
 }
 
-$(document).ready(function() {
-  
-  $('#submit-btn').on('click', function(event) {
-      // Prevent the default button click behavior
-      event.preventDefault();
+$(document).ready(function () {
+  // Call checkInputValue function on page load
+  $("#submit-btn").on("click", function (event) {
+    // Prevent the default button click behavior
+    event.preventDefault();
 
-      // Get the appointment time from the form
-      var appointmentTime = $('#form_time_at').val();
-      console.log(appointmentTime)
+    // Get the appointment time from the form
+    var appointmentTime = $("#form_time_at").val();
+    console.log(appointmentTime);
 
-      // Make AJAX request to check for conflicts
-      $.ajax({
-             url: `/appointments/check-conflict?time_at=${appointmentTime}`,
-          method: 'GET',
-          success: function(response) {
-              console.log(response)
-              if (response.conflict == true) {
-                  // If conflict is found, show modal
-                  $('#conflictModal').modal('show');
-              }
-              else {
-                  // If no conflict, submit the form
-                  $('#new-form').submit();
-              }
-               
-          },
-          error: function(xhr, status, error) {
-              // Handle errors if needed
-          }
-      });
-  });
-  
-  // Attach click event handler to the "Proceed" button inside the modal
-  $('#submitFormModal').on('click', function() {
-      // Submit the form
-      $('#new-form').submit();
+    if (appointmentTime == null || appointmentTime == "") {
+      // Fire modal if the appointment time is null
+      $("#nullValueModal").modal("show");
+      return; // Exit the function
+    }
+
+    // Make AJAX request to check for conflicts
+    $.ajax({
+      url: `/appointments/check-conflict?time_at=${appointmentTime}`,
+      method: "GET",
+      success: function (response) {
+        console.log(response);
+        if (response.conflict == true) {
+          // If conflict is found, show modal
+          $("#conflictModal").modal("show");
+        } else {
+          // If no conflict, submit the form
+          $("#new-form").submit();
+        }
+      },
+      error: function (xhr, status, error) {
+        // Handle errors if needed
+      },
+    });
   });
 
-  // Attach click event handler to the "Close" button inside the modal
-  $('#closeButtonModal').on('click', function() {
-      // Close the modal
-      $('#conflictModal').modal('hide');
+  $("#submitFormModal").on("click", function () {
+    $("#new-form").submit();
+  });
+
+  $("#closeButtonModal").on("click", function () {
+    $("#conflictModal").modal("hide");
+  });
+
+  $("#closeNullValueModal").on("click", function () {
+    $("#nullValueModal").modal("hide");
   });
 });

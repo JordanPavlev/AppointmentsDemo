@@ -36,6 +36,9 @@ class AppointmentsController extends AbstractController
 
         $appointment = new Appointments();
 
+        // put default value in the appointment time field (current datetime)
+        // $appointment->setTimeAt(new \DateTime('now', new \DateTimeZone('Europe/Sofia')));
+
         // $logger->info($timestamp);
         if ($timestamp != null) {
             $parsedTimestmap = Carbon::parse($timestamp);
@@ -52,12 +55,20 @@ class AppointmentsController extends AbstractController
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client email',
                 ],
+                'required' => true, // Making the field required
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Time cannot be blank']),
+                ],
             ])
             ->add('client_name', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client name',
+                ],
+                'required' => true, // Making the field required
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Name cannot be blank']),
                 ],
             ])
             ->add('client_email', EmailType::class, [
@@ -77,6 +88,7 @@ class AppointmentsController extends AbstractController
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client phone number',
                 ],
+                'required' => true, // Making the field required
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Regex([
@@ -133,12 +145,18 @@ class AppointmentsController extends AbstractController
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client email',
                 ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                ],
             ])
             ->add('client_name', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client name',
+                ],
+                'constraints' => [
+                    new Assert\NotBlank(),
                 ],
             ])
             ->add('client_email', EmailType::class, [
@@ -147,6 +165,10 @@ class AppointmentsController extends AbstractController
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client email',
                 ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Email(),
+                ],
             ])
             ->add('client_phone', TextType::class, [
                 'label' => false,
@@ -154,10 +176,18 @@ class AppointmentsController extends AbstractController
                     'class' => 'form-control mb-6 ',
                     'placeholder' => 'Client phone number',
                 ],
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Regex([
+                        'pattern' => '/^[0-9]{10}$/',
+                        'message' => 'Please enter a valid phone number (10 digits).',
+                    ]),
+                ],
             ])
 
             ->getForm();
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
@@ -186,39 +216,39 @@ class AppointmentsController extends AbstractController
     #[Route('/{id}/delete', name: 'app_appointments_delete', methods: ['POST'])]
     public function delete(Request $request, Appointments $appointment, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $appointment->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($appointment);
-            $entityManager->flush();
-        }
+        // if ($this->isCsrfTokenValid('delete' . $appointment->getId(), $request->request->get('_token'))) {
+        $entityManager->remove($appointment);
+        $entityManager->flush();
+        // }
 
         return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
     }
 
     public function checkForAppointmentConflict(\DateTime $appointmentTime, EntityManagerInterface $entityManager)
     {
-         // Assuming you have appointments stored in a database
-    $repository = $entityManager->getRepository(Appointments::class);
+        // Assuming you have appointments stored in a database
+        $repository = $entityManager->getRepository(Appointments::class);
 
-    // Calculate the start and end times for the interval
-    $startTime = Carbon::parse($appointmentTime)->copy();
-    $endTime = Carbon::parse($appointmentTime)->copy();
-    $startTime->subMinutes(15);
-    $endTime->addMinutes(15);
+        // Calculate the start and end times for the interval
+        $startTime = Carbon::parse($appointmentTime)->copy();
+        $endTime = Carbon::parse($appointmentTime)->copy();
+        $startTime->subMinutes(15);
+        $endTime->addMinutes(15);
 
-     // Query appointments within the specified time interval
-     $conflictingAppointments = $repository->createQueryBuilder('a')
-     ->andWhere(':endTime >= a.time_at')
-     ->andWhere(':startTime <= a.time_at')
-     ->setParameter('startTime', $startTime)
-     ->setParameter('endTime', $endTime)
-     ->getQuery()
-     ->getResult();
-    // If there are conflicting appointments, return true
-    if (!empty($conflictingAppointments)) {
-        return true;
-    }
+        // Query appointments within the specified time interval
+        $conflictingAppointments = $repository->createQueryBuilder('a')
+            ->andWhere(':endTime >= a.time_at')
+            ->andWhere(':startTime <= a.time_at')
+            ->setParameter('startTime', $startTime)
+            ->setParameter('endTime', $endTime)
+            ->getQuery()
+            ->getResult();
+        // If there are conflicting appointments, return true
+        if (!empty($conflictingAppointments)) {
+            return true;
+        }
 
-    // No conflicting appointments found, return false
-    return false;
+        // No conflicting appointments found, return false
+        return false;
     }
 }

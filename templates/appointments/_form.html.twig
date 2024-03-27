@@ -1,3 +1,19 @@
+<!-- Modal -->
+<div class="modal fade" id="nullValueModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+      </div>
+      <div class="modal-body">
+       The time of the appointment can't be empty. Please enter a value.
+      </div>
+      <div class="modal-footer">
+        <button id="closeNullValueModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {# Modal is displayed if there is time conflict  #}
 <div class="modal" id="conflictModal">
     <div class="modal-dialog">
@@ -17,6 +33,10 @@
         </div>
     </div>
 </div>
+<script>
+
+
+</script>
 
 {{ form_start(form) }}
     {{ form_widget(form) }}

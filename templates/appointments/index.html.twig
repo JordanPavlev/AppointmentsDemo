@@ -1,73 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All appointments{% endblock %}
+{% block title %}
+  All appointments
+{% endblock %}
 
 {% block body %}
-    <div class="page-wrapper">
-      <div class="body-wrapper">
-    <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
-    <div class="card-body px-4 py-3">
-      <div class="row align-items-center">
-        <div class="col-9">
-          <h4 class="fw-semibold mb-8">Appointments</h4>
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">
-                <a class="text-muted text-decoration-none" href="/">Home</a>
-              </li>
-              <li class="breadcrumb-item" aria-current="page">Appointments</li>
-            </ol>
-          </nav>
-        </div>
-        <div class="col-3">
-          <div class="text-center mb-n5">
-            <img src="/assets/images/ChatBc-eeee84eb2b7d7561d3d1e503032f2ae3.png" alt="" class="img-fluid mb-n4">
+  <div class="page-wrapper">
+    <div class="body-wrapper">
+      <div class="card bg-info-subtle shadow-none position-relative overflow-hidden mb-4">
+        <div class="card-body px-4 py-3">
+          <div class="row align-items-center">
+            <div class="col-9">
+              <h4 class="fw-semibold mb-8">Appointments</h4>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a class="text-muted text-decoration-none" href="/">Home</a>
+                  </li>
+                  <li class="breadcrumb-item" aria-current="page">Appointments</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-3">
+              <div class="text-center mb-n5">
+                <img src="/assets/images/ChatBc-eeee84eb2b7d7561d3d1e503032f2ae3.png" alt="" class="img-fluid mb-n4" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <dir class="row">
-  <div class="d-flex justify-content-end">
-    <a class="btn btn-success" href="{{ path('app_appointments_new') }}">Create new</a>
-  </div>
-  </dir>
+      <dir class="row">
+        <div class="d-flex justify-content-end">
+          <a class="btn btn-success" href="{{ path('app_appointments_new') }}">Create new</a>
+        </div>
+      </dir>
 
-    <table class="table">
+      <table class="table">
         <thead class="">
-            <tr>
-                <th>Serial number</th>
-                <th>Time</th>
-                <th>Client name</th>
-                <th>Client email</th>
-                <th>Client phone</th>
-                {# <th>Created_at</th>
+          <tr>
+            <th>Serial number</th>
+            <th>Time</th>
+            <th>Client name</th>
+            <th>Client email</th>
+            <th>Client phone</th>
+            {# <th>Created_at</th>
                 <th>Updated_at</th> #}
-                <th></th>
-            </tr>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
-        {% for appointment in appointments %}
+          {% for appointment in appointments %}
             <tr>
-                <td>{{ appointment.id }}</td>
-                <td>{{ appointment.timeAt ? appointment.timeAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ appointment.clientName }}</td>
-                <td>{{ appointment.clientEmail }}</td>
-                <td>{{ appointment.clientPhone }}</td>
-                {# <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+              <td>{{ appointment.id }}</td>
+              <td>{{ appointment.timeAt ? appointment.timeAt|date('Y-m-d H:i:s') : '' }}</td>
+              <td>{{ appointment.clientName }}</td>
+              <td>{{ appointment.clientEmail }}</td>
+              <td>{{ appointment.clientPhone }}</td>
+              {# <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ appointment.updatedAt ? appointment.updatedAt|date('Y-m-d H:i:s') : '' }}</td> #}
-                <td>
-                    <a class="btn mx-2 btn-primary" href="{{ path('app_appointments_show', {'id': appointment.id}) }}">Show</a>
-                    <a class="btn mx-2 btn-success" href="{{ path('app_appointments_edit', {'id': appointment.id}) }}">Edit</a>
-                    <a class="btn mx-2 btn-danger" href="{{ path('app_appointments_delete', {'id': appointment.id}) }}">Delete</a>
-                </td>
+              <td>
+                <div class="d-flex">
+                  <a class="btn mx-2 btn-primary" href="{{ path('app_appointments_show', { id: appointment.id }) }}">Show</a>
+                  <a class="btn mx-2 btn-success" href="{{ path('app_appointments_edit', { id: appointment.id }) }}">Edit</a>
+                  <a>{% include 'appointments/_delete_form.html.twig' with { appointmentId: appointment.id } %}</a>
+                </div>
+              </td>
             </tr>
-        {% else %}
+          {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+              <td colspan="8">no records found</td>
             </tr>
-        {% endfor %}
+          {% endfor %}
         </tbody>
-    </table>
-      </div></div>
+      </table>
+    </div>
+  </div>
 {% endblock %}
