@@ -136,7 +136,7 @@ class AppointmentsController extends AbstractController
         }
 
         $form = $this->createFormBuilder($appointment, [
-            'attr' => ['id' => 'edit_form'],
+            'attr' => ['id' => 'edit-form'],
         ])
             ->add('time_at', DateTimeType::class, [
                 'widget' => 'single_text',

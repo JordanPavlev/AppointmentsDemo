@@ -127,6 +127,7 @@ $(document).ready(function () {
         } else {
           // If no conflict, submit the form
           $("#new-form").submit();
+          $("#edit-form").submit();
         }
       },
       error: function (xhr, status, error) {
@@ -137,6 +138,7 @@ $(document).ready(function () {
 
   $("#submitFormModal").on("click", function () {
     $("#new-form").submit();
+    $("#edit-form").submit();
   });
 
   $("#closeButtonModal").on("click", function () {
